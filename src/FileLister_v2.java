@@ -24,7 +24,7 @@ public class FileLister_v2 extends Frame implements ActionListener, ItemListener
     private List list;                  // To display the directory contents in
     private TextField details;          // To display detail info in.
     private Panel buttons;              // Holds the buttons
-    private Button up, close,delete_Btn;           // The Up and Close buttons
+    private Button up, close,delete_Btn,changeDir;           // The Up and Close buttons
     private File currentDir;            // The directory currently listed
     private FilenameFilter filter;      // An optional filter for the directory
     private String[] files;             // The directory contents
@@ -50,8 +50,8 @@ public class FileLister_v2 extends Frame implements ActionListener, ItemListener
         
         details = new TextField();         // Set up the details area
         details.setFont(new Font("MonoSpaced", Font.PLAIN, 12));
-        details.setEditable(false);
-
+        details.setEditable(true); //enabled a editable feature
+       
         buttons = new Panel();             // Set up the button box
         buttons.setLayout(new FlowLayout(FlowLayout.RIGHT, 15, 5));
         buttons.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -59,15 +59,17 @@ public class FileLister_v2 extends Frame implements ActionListener, ItemListener
         delete_Btn = new Button("Delete this file");
         up = new Button("Up a Directory"); // Set up the two buttons
         close = new Button("Close");
+        changeDir = new Button("Change Directory");
         
         delete_Btn.addActionListener(this);
         up.addActionListener(this);
         close.addActionListener(this);
-        
+        changeDir.addActionListener(this);
 
         buttons.add(delete_Btn);
         buttons.add(up);                   // Add buttons to button box
         buttons.add(close);
+        buttons.add(changeDir);
         
         this.add(list, "Center");          // Add stuff to the window
         this.add(details, "North");
@@ -141,6 +143,7 @@ public class FileLister_v2 extends Frame implements ActionListener, ItemListener
         if (e.getSource() == close) this.dispose();
         else if (e.getSource() == up) { up(); }
         else if (e.getSource() == delete_Btn) {deleteCurrentFile();}
+        else if (e.getSource() == changeDir) {changeCurrentDirectory();}
         else if (e.getSource() == list) {  // Double click on an item
             int i = list.getSelectedIndex(); // Check which item
             if (i == 0) up();                // Handle first Up To Parent item
@@ -154,6 +157,9 @@ public class FileLister_v2 extends Frame implements ActionListener, ItemListener
         }
     }
     
+    private void changeCurrentDirectory(){
+        listDirectory(this.details.getText());
+    }
     private void deleteCurrentFile(){
         //to delete a file when a user pressed a button
         
