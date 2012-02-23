@@ -24,7 +24,7 @@ public class FileLister_v2 extends Frame implements ActionListener, ItemListener
     private List list;                  // To display the directory contents in
     private TextField details;          // To display detail info in.
     private Panel buttons;              // Holds the buttons
-    private Button up, close,delete;           // The Up and Close buttons
+    private Button up, close,delete_Btn;           // The Up and Close buttons
     private File currentDir;            // The directory currently listed
     private FilenameFilter filter;      // An optional filter for the directory
     private String[] files;             // The directory contents
@@ -56,16 +56,19 @@ public class FileLister_v2 extends Frame implements ActionListener, ItemListener
         buttons.setLayout(new FlowLayout(FlowLayout.RIGHT, 15, 5));
         buttons.setFont(new Font("SansSerif", Font.BOLD, 14));
 
+        delete_Btn = new Button("Delete this file");
         up = new Button("Up a Directory"); // Set up the two buttons
         close = new Button("Close");
-        delete = new Button("Delete this file");
+        
+        delete_Btn.addActionListener(this);
         up.addActionListener(this);
         close.addActionListener(this);
-        delete.addActionListener(this);
+        
 
+        buttons.add(delete_Btn);
         buttons.add(up);                   // Add buttons to button box
         buttons.add(close);
-        buttons.add(delete);
+        
         this.add(list, "Center");          // Add stuff to the window
         this.add(details, "North");
         this.add(buttons, "South");
@@ -137,7 +140,7 @@ public class FileLister_v2 extends Frame implements ActionListener, ItemListener
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == close) this.dispose();
         else if (e.getSource() == up) { up(); }
-        else if (e.getSource() == delete) {deleteCurrentFile();}
+        else if (e.getSource() == delete_Btn) {deleteCurrentFile();}
         else if (e.getSource() == list) {  // Double click on an item
             int i = list.getSelectedIndex(); // Check which item
             if (i == 0) up();                // Handle first Up To Parent item
@@ -159,7 +162,9 @@ public class FileLister_v2 extends Frame implements ActionListener, ItemListener
             //handle code here
             return;
         }
-        currentFile.delete();
+        boolean success = currentFile.delete();
+        if(success)
+            list.remove(currentFile.getName());
     }
     /** A convenience method to display the contents of the parent directory */
     protected void up() {
@@ -182,7 +187,7 @@ public class FileLister_v2 extends Frame implements ActionListener, ItemListener
      * If no directory is specified, use the current directory.
      **/
     public static void main(String args[]) throws IOException {
-        FileLister f;
+        FileLister_v2 f;
         FilenameFilter filter = null;  // The filter, if any
         String directory = null;       // The specified dir, or the current dir
         
@@ -212,7 +217,7 @@ public class FileLister_v2 extends Frame implements ActionListener, ItemListener
         // if no directory specified, use the current directory
         if (directory == null) directory = System.getProperty("user.dir");
         // Create the FileLister object, with directory and filter specified.
-        f = new FileLister(directory, filter);
+        f = new FileLister_v2(directory, filter);
         // Arrange for the application to exit when the window is closed
         f.addWindowListener(new WindowAdapter() {
             public void windowClosed(WindowEvent e) { System.exit(0); }

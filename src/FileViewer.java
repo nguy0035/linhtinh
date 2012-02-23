@@ -44,7 +44,7 @@ public class FileViewer extends Frame implements ActionListener {
         
         // Create a bottom panel to hold a couple of buttons in
         Panel p = new Panel();
-        p.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+        p.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
         this.add(p, "South");
 	
         // Create the buttons and arrange to handle button clicks
